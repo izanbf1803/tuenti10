@@ -21,38 +21,49 @@ vector<int> get_file_bytes(string filename) {
    	return ibytes;
 }
 
-const ll P = 31; // polynomial hash base
-const ll Pinv = 838709685; // P^-1 mod M
-const ll M = 1e9 + 9; // polynomial hash modulus
-vector<ll> preh; // prefix hash, preh[i] = hash[0...i-1], preh[0] = 0
-vector<ll> minv; // Pinv^i
+template<ll P_, ll Pinv_, ll M_>
+struct PolynomialHash {
+	const ll P = P_; // polynomial hash base
+	const ll M = M_; // polynomial hash modulus
+	const ll Pinv = Pinv_; // P^-1 mod M
+	ll* preh; // prefix hash, preh[i] = hash[0...i-1], preh[0] = 0
+	ll* minv; // Pinv^i
 
-void precompute(const vector<int>& data) {
-	int n = data.size();
-	preh.assign(n+1, 0);
-	preh[0] = 0;
-	ll p_pow = 1;
-	for (int i = 0; i < n; ++i) {
-		preh[i+1] = (preh[i] + (data[i] + 1) * p_pow) % M;
-		p_pow = (p_pow * P) % M;
+	void precompute(const vector<int>& data) {
+		int n = (int)data.size();
+		preh = new ll[n+1];
+		preh[0] = 0;
+		ll p_pow = 1;
+		for (int i = 0; i < n; ++i) {
+			preh[i+1] = (preh[i] + (data[i] + 1) * p_pow) % M;
+			p_pow = (p_pow * P) % M;
+		}
+		minv = new ll[n+1];
+		minv[0] = 1;
+		for (int i = 1; i < n+1; ++i) {
+			minv[i] = (minv[i-1] * Pinv) % M;
+		}
 	}
-	minv.assign(n+1, 0);
-	minv[0] = 1;
-	for (int i = 1; i < n+1; ++i) {
-		minv[i] = (minv[i-1] * Pinv) % M;
-	}
-}
 
-ll hashv(int l, int r) {
-	return ((preh[r+1] - preh[l] + M) * minv[l]) % M;
+	ll hashv(int l, int r) {
+		return ((preh[r+1] - preh[l] + M) * minv[l]) % M;
+	}
+};
+
+PolynomialHash<31, 838709685, (ll)1e9+9> ph1;
+PolynomialHash<37, 621621626, (ll)1e9+7> ph2;
+PolynomialHash<41, 292682933, (ll)1e9+21> ph3;
+
+bool hash_eq(int l1, int r1, int l2, int r2) {
+	return  ph1.hashv(l1, r1) == ph1.hashv(l2, r2)
+		and ph2.hashv(l1, r1) == ph2.hashv(l2, r2);
 }
 
 pair<int,int> find_coincidence_aprox(int n, int len) {
-	for (int i = 0; i+len-1 < n; i += int(1e6)) {
+	for (int i = 0; i+len-1 < n; i += int(3e6)) {
 		for (int j = i+1; j+len-1 < n; ++j) {
-			ll hi = hashv(i, i+len-1);
-			ll hj = hashv(j, j+len-1);
-			if (hi == hj) return {i, j};
+			if (hash_eq(i, i+len-1, j, j+len-1))
+				return {i, j};
 		}
 	}
 	return {-1, -1};
@@ -60,10 +71,9 @@ pair<int,int> find_coincidence_aprox(int n, int len) {
 
 pair<int,int> find_coincidence(int n, int len) {
 	for (int i = 0; i+len-1 < n; ++i) {
-		for (int j = i+1; j+len-1 < n; ++j) {
-			ll hi = hashv(i, i+len-1);
-			ll hj = hashv(j, j+len-1);
-			if (hi == hj) return {i, j};
+		for (int j = i+len; j+len-1 < n; ++j) {
+			if (hash_eq(i, i+len-1, j, j+len-1))
+				return {i, j};
 		}
 	}
 	return {-1, -1};
@@ -84,9 +94,11 @@ int main() {
 	// }
 	// cout << to_string(c) << endl;
 	vector<int> data = get_file_bytes(FILE_);
-	precompute(data);
+	ph1.precompute(data);
+	ph2.precompute(data);
+	ph3.precompute(data);
 
-	int n = data.size();
+	int n = (int)data.size();
 
 	int L = 1;
 	int R = n;
