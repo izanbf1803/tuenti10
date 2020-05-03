@@ -1,3 +1,32 @@
+# Python script used to bruteforce robot's code:
+
+import pyautogui
+import time
+import sys
+
+# copy pase before executing: 🗣 | 💬 🤖
+
+seconds = 10
+while seconds > 0:
+    print(f"Starting in {seconds} seconds")
+    time.sleep(1)
+    seconds -= 1
+
+l = int(sys.argv[1])
+r = int(sys.argv[2])
+for i in range(l, r+1):
+    pyautogui.click(button='right') # pyautogui.hotkey('ctrl', 'v')
+    pyautogui.press('left', presses=6)
+    pyautogui.write(" "+str(i), interval=0.05)
+    pyautogui.press('end')
+    pyautogui.press('enter') 
+    print(i)
+
+
+
+NOTEBOOK
+========
+
 talk
 -------------
 hada:
@@ -24,10 +53,14 @@ robot:
 genio:
 💬 🧞
 
+mayordomo:
+💬 🤵
 
 m. glass
 -----
 🔎
+
+
 
 bag
 ---------
@@ -36,6 +69,11 @@ bag
 take
 ----------------
 ✋
+
+✋ 🛎
+✋ 🍀
+✋ 👑
+✋ .💍
 
 light
 ---------------
@@ -47,13 +85,16 @@ speak
 
 🗣 119 | 💬 🧟
 
-🗣 119 | 💬 🤖
+🗣 242 | 💬 🤖
+
+🗣 coffe | 💬 🤵
 
 🗣 119 | 💬 🧞
 
 rooms
 ----------------
 🚶 ..
+🚶 🚪
 🚶 🚪🚾
 🚶 🚪101
 🚶 🚪102
@@ -63,7 +104,13 @@ rooms
 🚶 🚪106
 🚶 🚪107
 🚶 🚪108
+🚶 🕳
 
 
+🔎 🚽
+
+242
 119
 LOOK AT THIS CROWN I STOLE IT FOR YOU
+
+code: PetsAreNotAllowedInVillaFeristela

@@ -1,0 +1,23 @@
+file_sizes.txt
+--------------
+This file contains a list of animals with it's respective file size, since
+all of them are filled with 0x00 bytes we just need to know the initial size.
+It was computed using the script "find_sizes.py".
+
+
+15.cc
+-----
+We can compute the CRC32 of a file if we know how to compute the CRC32 of a file
+adding a new byte at the tail. There are a small number of bytes != 0, and all other 
+bytes are 0, so we can decompose the operations as:
+add_byte(0xf3)
+add_byte(0x00) x 100000
+add_byte(0x1e)
+add_byte(0x00) x 98765432
+... etc
+After adding a byte we get a new CRC32, CRC32 works as a hash function so we can assume
+it's bits are almost "random" after each operation, so i precomputed the results of 
+add_byte(0x00) x 100000 for every initial CRC32 that is multiple of 128, since we will
+do lots of add_byte(0x00) operations, almost every 128 steps we can skip 100000 steps
+by using the precomputed values. This optimization was enough to compute the answers 
+in a reasonable amount of time.  

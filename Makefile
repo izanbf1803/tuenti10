@@ -1,1 +1,1 @@
-CXXFLAGS=-DLOCAL -Wall -Wconversion -Wfatal-errors -std=c++14 -O2
+CXXFLAGS=-DLOCAL -Wall -Wconversion -Wfatal-errors -std=c++14 -O3
