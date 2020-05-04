@@ -84,8 +84,6 @@ struct Dinic {
     }
 };
 
-#include "debug.h"
-
 int main() {
     int C;
     cin >> C;
