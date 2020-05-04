@@ -1,6 +1,5 @@
 #include <bits/stdc++.h>
 using namespace std;
-#include "debug.h" ///////////
 
 const int INF = 5000;
 
@@ -348,12 +347,10 @@ int main() {
         }
         else {
             if (ESC) {
-                // make it valid LOLMAO
-                ans = solve_LOLMAO(S);
+                ans = solve_LOLMAO(S); // make it valid LOLMAO
             }
             else {
-                // make it valid ESC
-                ans = solve_ESC(S);
+                ans = solve_ESC(S); // make it valid ESC
             }
         }
         if (ans >= INF)
